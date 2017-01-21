@@ -4,7 +4,7 @@ title       = "Style guideline for Go packages"
 description = "Best practices to organize and name Go packages"
 tags        = [ "readability" ]
 type        = "archived"
-draft = false
+draft       = false
 +++
 
 Go is about naming and organization as much as everything else in the language.
@@ -32,7 +32,7 @@ package models // DON'T DO IT!!!
 type User struct {...}
 ```
 
-Rather than creating a models pacakge and declare all entity types there,
+Rather than creating a models package and declare all entity types there,
 a User type should live in a user package that provides everything related to users.
 
 ```
@@ -134,7 +134,7 @@ not just improves your code quality but also your users'!
 
 ### Lowercase only
 
-Package names should be lowercase. Don't use under_scores or camelCase in package names.
+Package names should be lowercase. Don't use snake_case or camelCase in package names.
 The Go blog has a [comprehensive guide](https://blog.golang.org/package-names) about naming packages
 with a good variety of examples.
 
