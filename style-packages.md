@@ -9,40 +9,20 @@ draft       = false
 
 Go is about naming and organization as much as everything else in the language.
 Go code lives in a package, a package is the entry point to access Go code. Understanding
-and establishing good practices around packages is important to author effective Go code.
+and establishing good practices around packages is important to write effective Go code.
+
+Well-organized Go code is easy to discover,
+use and read. Well-organized code is as critical as well designed APIs. The location, name,
+and the structure of your packages are the first elements your users see and interact with.
+
+A package, the minimal structure to organize Go code, is a directory/folder with multiple files.
 
 ----
 
 ## Organization
 
 Let's begin with suggestions how you should organize Go code and explain conventions about
-locating Go packages. Well-organized Go code is easy to discover,
-use and read. Well-organized code is as critical as well designed APIs. The location, name,
-and the structure of your packages are the first elements your users see and interact with.
-
-### Organize by responsbility
-
-A common baggage from other languages is to organize types together in a package
-called models or types. In Go, we organize code by their functional responsbilities.
-
-``` wrong
-package models // DON'T DO IT!!!
-
-// User represents a user in the system.
-type User struct {...}
-```
-
-Rather than creating a models package and declare all entity types there,
-a User type should live in a user package that provides everything related to users.
-
-```
-package user
-
-// User represents a user in the system.
-type User struct {...}
-
-func QueryUsers(ctx context.Context, q *Query) ([]*User, *Iterator, error)
-```
+locating Go packages.
 
 ### Use multiple files
 
@@ -68,19 +48,35 @@ A good place for a Header struct type might be in `headers.go`.
 
 ```
 $ cat headers.go
+package http
 
 // Header represents an HTTP header.
 type Header struct {...}
 ```
 
-### Use cmd directory for commands
+### Organize by responsbility
 
-If your repository is large and provides multiple commands via multiple main packages,
-put the these main packages under a `cmd` directory. Go users are familiar with the convention
-that a cmd directory will provide main packages.
+A common practise from other languages is to organize types together in a package
+called models or types. In Go, we organize code by their functional responsbilities.
 
-For example, [x/tools](https://godoc.org/golang.org/x/tools/)
-publishes all of the tools from [golang.org/x/tools/cmd](https://godoc.org/golang.org/x/tools/cmd).
+``` wrong
+package models // DON'T DO IT!!!
+
+// User represents a user in the system.
+type User struct {...}
+```
+
+Rather than creating a models package and declare all entity types there,
+a User type should live in a user package that provides everything related to users.
+
+```
+package user
+
+// User represents a user in the system.
+type User struct {...}
+
+func QueryUsers(ctx context.Context, q *Query) ([]*User, *Iterator, error)
+```
 
 ### Optimize for godoc
 
@@ -118,19 +114,24 @@ Examples are a good way to increase visibility of a less discoverable package.
 For example, an example for datastore.NewClient might reference the extraoption package.
 
 ### Don't export from main
+An identifier may be [exported](https://golang.org/ref/spec#Exported_identifiers)
+to permit access to it from another package.
 
-Don't export symbols from a main package if you are not building the package
-to a .so, or a .a or Go plugin. Main packages are not importable, so exporting
-symbols from main packages is unnecessary unless they are used from other languages via
-[cgo's export functionality](https://golang.org/cmd/cgo/#hdr-C_references_to_Go).
+Main packages are not importable, so exporting identifiers from main packages is unnecessary.
+Don't export identifiers from a main package if you are building the package to a binary.
+
+Exceptions to this rule might be the main packages built into a .so, or a .a or Go plugin.
+In such cases, Go code might be used from other languages via
+[cgo's export functionality](https://golang.org/cmd/cgo/#hdr-C_references_to_Go)
+and exporting identifiers are required.
 
 ----
 
 ## Package name and import path
 
-A package name and import path is a significant identifier of your package
-and represents everything your package contains. Naming your packages wisely
-not just improves your code quality but also your users'!
+A package name and import path are both significant identifiers of your package
+and represent everything your package contains. Naming your packages canonically
+not just improves your code quality but also your users'.
 
 ### Lowercase only
 
