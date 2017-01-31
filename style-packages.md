@@ -8,26 +8,36 @@ draft       = false
 +++
 
 Go is about naming and organization as much as everything else in the language.
-Go code lives in a package, a package is the entry point to access Go code. Understanding
-and establishing good practices around packages is important to write effective Go code.
-
 Well-organized Go code is easy to discover,
 use and read. Well-organized code is as critical as well designed APIs. The location, name,
 and the structure of your packages are the first elements your users see and interact with.
 
-A package, the minimal structure to organize Go code, is a directory/folder with multiple files.
+This document's goal is to guide you with common good practices not set rules.
+You will always need to use your own judgement to pick the most elegant solution
+for yourself.
+
+## Packages
+All Go code is organized into packages. A package in Go is simply a directory/folder with one or more
+`.go` files inside of it. Go packages provide isolation and organization of code similar to
+how directories/folders organize files on a computer.
+
+All Go code lives in a package and a package is the entry point to access Go code. Understanding
+and establishing good practices around packages is important to write effective Go code.
 
 ----
 
-## Organization
+## Package Organization
 
 Let's begin with suggestions how you should organize Go code and explain conventions about
 locating Go packages.
 
 ### Use multiple files
 
-If you have a large package, feel free to use many files.
-For example, an HTTP package might have been logically separated into different files
+A package is a directory with one or more Go files.
+Feel free to separate your code into as many files as logically
+make sense for optimal readability.
+
+For example, an HTTP package might have been separated into different files
 according to the HTTP aspect the file handles.
 In the following example, an HTTP package is broken down into a few files:
 header types and code, cookie types and code, the actual HTTP implementation, and
@@ -53,6 +63,9 @@ package http
 // Header represents an HTTP header.
 type Header struct {...}
 ```
+
+Even though, the Go language doesn't restrict where you define types,
+it is often a good practice to keep the core types grouped at the top of a file.
 
 ### Organize by responsbility
 
@@ -120,6 +133,7 @@ to permit access to it from another package.
 Main packages are not importable, so exporting identifiers from main packages is unnecessary.
 Don't export identifiers from a main package if you are building the package to a binary.
 
+
 Exceptions to this rule might be the main packages built into a .so, or a .a or Go plugin.
 In such cases, Go code might be used from other languages via
 [cgo's export functionality](https://golang.org/cmd/cgo/#hdr-C_references_to_Go)
@@ -127,7 +141,7 @@ and exporting identifiers are required.
 
 ----
 
-## Package name and import path
+## Package Naming
 
 A package name and import path are both significant identifiers of your package
 and represent everything your package contains. Naming your packages canonically
@@ -224,7 +238,7 @@ package datastore // import "cloud.google.com/go/datastore"
 
 ----
 
-## Package-level documentation
+## Package Documentation
 
 Always document the package. Package documentation is a top-level comment
 immediately preceding the package clause. For non-main packages, godoc always starts with
@@ -248,9 +262,3 @@ Sometimes, package docs can get very lengthy, especially when they provide detai
 of usage and guidelines.
 Move the package godoc to a `doc.go` file.
 (See an example of a [doc.go](https://github.com/GoogleCloudPlatform/google-cloud-go/blob/master/datastore/doc.go).)
-
-----
-
-Although this article sets an opinionated guideline, you will also need to
-use your own judgement to discover the most elegant solution.
-Always understand the context and pick the best choice.
